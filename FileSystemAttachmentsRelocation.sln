@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSAR.DomainModel", "FSAR.Do
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSAR.DataAccessLayer", "FSAR.DataAccessLayer\FSAR.DataAccessLayer.csproj", "{123F29B5-9A1B-4ACE-A84E-D66D461F311F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSAR.Engine", "FSAR.Engine\FSAR.Engine.csproj", "{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{123F29B5-9A1B-4ACE-A84E-D66D461F311F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{123F29B5-9A1B-4ACE-A84E-D66D461F311F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{123F29B5-9A1B-4ACE-A84E-D66D461F311F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
