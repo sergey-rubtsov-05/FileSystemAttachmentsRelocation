@@ -5,10 +5,13 @@ using FSAR.DomainModel;
 
 namespace FSAR.DataAccessLayer
 {
-    public class AttachmentEngine : BaseEngine
+    public class AttachmentRepository : BaseRepository
     {
 
         protected override string TableName => "DocFlow_Attachment_Attachment";
+
+        private const string TableFields = "Id, DisplayFileName, FilePath";
+
         public List<Attachment> GetAttachmentByFilePathMask(string mask)
         {
             var attachments = Session.Query<Attachment>($@"
@@ -23,7 +26,7 @@ FROM {TableName}").ToList();
             var attachments =
                 Session.Query<Attachment>(
                     $@"
-SELECT Id, DisplayFileName, FilePath, PreviewFilePath
+SELECT TOP 50 {TableFields}
 FROM {TableName}
 WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'").ToList();
 

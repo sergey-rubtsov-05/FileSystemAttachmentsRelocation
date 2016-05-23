@@ -25,7 +25,7 @@ namespace FileSystemAttachmentsRelocation
             {
                 return _getNotInCurrentDir ?? (_getNotInCurrentDir = new CommandHandler(() =>
                 {
-                    using (var attachmentEngine = new AttachmentEngine())
+                    using (var attachmentEngine = new AttachmentRepository())
                     {
                         var attachments = attachmentEngine.GetAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
                         foreach (var attachment in attachments)

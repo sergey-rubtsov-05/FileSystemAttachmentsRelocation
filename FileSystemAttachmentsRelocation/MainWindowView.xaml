@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileSystemAttachmentsRelocation"
         mc:Ignorable="d"
-        Title="MainWindowView" Height="350" Width="525">
+        Title="MainWindowView" Height="450" Width="825">
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
@@ -14,9 +14,9 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="160"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="250"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="80"></ColumnDefinition>
+            <ColumnDefinition Width="100"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -24,6 +24,7 @@
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition />
+            <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Name="DestFolderLabel" Content="CurrentAttachmentsFolder" Grid.Column="1" Grid.Row="1"></Label>
         <TextBox Name="DestFolder" Text="{Binding CurrentAttachmentsFolder}" Grid.Column="3" Grid.Row="1"></TextBox>
@@ -39,7 +40,6 @@
                     <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Id"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding DisplayFileName}" Header="DFN"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding FilePath}" Header="FP"></GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding PreviewFilePath}" Header="PFP"></GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -5,12 +5,12 @@ using System.Data.SqlClient;
 
 namespace FSAR.DataAccessLayer
 {
-    public abstract class BaseEngine : IDisposable
+    public abstract class BaseRepository : IDisposable
     {
         protected abstract string TableName { get; }
         protected IDbConnection Session { get; private set; }
 
-        protected BaseEngine()
+        protected BaseRepository()
         {
             Session = new SqlConnection(GetConnectionString("Database"));
         }

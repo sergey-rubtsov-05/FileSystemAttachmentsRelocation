@@ -44,8 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttachmentEngine.cs" />
-    <Compile Include="BaseEngine.cs" />
+    <Compile Include="AttachmentRepository.cs" />
+    <Compile Include="BaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
