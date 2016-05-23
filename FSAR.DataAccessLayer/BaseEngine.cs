@@ -7,6 +7,7 @@ namespace FSAR.DataAccessLayer
 {
     public abstract class BaseEngine : IDisposable
     {
+        protected abstract string TableName { get; }
         protected IDbConnection Session { get; private set; }
 
         protected BaseEngine()

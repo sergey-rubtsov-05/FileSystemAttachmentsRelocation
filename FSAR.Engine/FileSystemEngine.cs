@@ -10,7 +10,12 @@ namespace FSAR.Engine
         {
             if (sourceFilePath == null) throw new ArgumentNullException(nameof(sourceFilePath));
             if (destFilePath == null) throw new ArgumentNullException(nameof(destFilePath));
-            if (!File.Exists(sourceFilePath)) throw new FileNotFoundException();
+
+            var destDirPath = Path.GetDirectoryName(destFilePath);
+            if (!string.IsNullOrWhiteSpace(destDirPath))
+                if (!Directory.Exists(destDirPath))
+                    Directory.CreateDirectory(destDirPath);
+
 
             File.Copy(sourceFilePath, destFilePath, false);
         }
