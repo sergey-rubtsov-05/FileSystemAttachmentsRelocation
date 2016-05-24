@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileSystemAttachmentsRelocation"
         mc:Ignorable="d"
-        Title="MainWindowView" Height="450" Width="825">
+        Title="MainWindowView" Height="550" Width="925">
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
@@ -18,6 +18,8 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="100"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
@@ -25,21 +27,41 @@
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition />
             <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition />
+            <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Name="DestFolderLabel" Content="CurrentAttachmentsFolder" Grid.Column="1" Grid.Row="1"></Label>
         <TextBox Name="DestFolder" Text="{Binding CurrentAttachmentsFolder}" Grid.Column="3" Grid.Row="1"></TextBox>
         <Button Grid.Column="5" Grid.Row="1" Content="Get not in dir" Command="{Binding GetNotInCurrentDir}"></Button>
+        <Button Grid.Column="7" Grid.Row="1" Content="Start!!!" Command="{Binding StartProcess}"></Button>
         <ListView
             Name="AttachmentsToRelocation"
             Grid.Row="3"
             Grid.Column="1"
-            Grid.ColumnSpan="5"
+            Grid.ColumnSpan="7"
             ItemsSource="{Binding AttachmentsToRelocation}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Id"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding DisplayFileName}" Header="DFN"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding FilePath}" Header="FP"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView
+            Grid.Row="5"
+            Grid.Column="1"
+            Grid.ColumnSpan="7"
+            ItemsSource="{Binding InfoMessages}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding}" Header="Message" Width="650">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap"></TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

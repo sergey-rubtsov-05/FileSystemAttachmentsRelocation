@@ -32,5 +32,15 @@ WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'").ToList();
 
             return attachments;
         }
+
+        public void Update(Attachment attachment)
+        {
+            return;
+            Session.Query<Attachment>(
+                $@"
+UPDATE {TableName}
+SET FilePath = {attachment.FilePath}
+WHERE Id = @Id", new { attachment.Id });
+        }
     }
 }

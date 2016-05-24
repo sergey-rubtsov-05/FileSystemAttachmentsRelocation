@@ -101,6 +101,10 @@
       <Project>{3AE25347-B171-4AEF-8642-2BBFC2A0339E}</Project>
       <Name>FSAR.DomainModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FSAR.Engine\FSAR.Engine.csproj">
+      <Project>{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}</Project>
+      <Name>FSAR.Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
