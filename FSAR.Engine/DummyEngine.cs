@@ -14,7 +14,7 @@ namespace FSAR.Engine
 
         public void CopyFile(string filePath, string newActualPath)
         {
-            for (var i = 0; i > 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 Thread.Sleep(100);
             }
@@ -22,7 +22,7 @@ namespace FSAR.Engine
 
         public bool MergeMd5FileHash(string filePath, string newActualPath)
         {
-            for (var i = 0; i > 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 Thread.Sleep(100);
             }

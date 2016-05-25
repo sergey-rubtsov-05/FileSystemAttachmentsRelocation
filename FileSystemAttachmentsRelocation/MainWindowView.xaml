@@ -52,15 +52,10 @@
             Grid.Row="5"
             Grid.Column="1"
             Grid.ColumnSpan="7"
-            ItemsSource="{Binding InfoMessages}">
+            ItemsSource="{Binding InfoMessages}" FontFamily="Consolas">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding}" Header="Message" Width="650">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock TextWrapping="Wrap"></TextBlock>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                 </GridView>
             </ListView.View>

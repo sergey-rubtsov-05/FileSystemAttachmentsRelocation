@@ -2,7 +2,9 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using FSAR.DataAccessLayer;
 using FSAR.DomainModel;
 using FSAR.Engine;
@@ -16,6 +18,7 @@ namespace FileSystemAttachmentsRelocation
             AttachmentsToRelocation = new ObservableCollection<Attachment>();
             InfoMessages = new ObservableCollection<string>();
             CurrentAttachmentsFolder = @"C:\Uploads\TTK";
+            _dispatcher = Dispatcher.CurrentDispatcher;
         }
 
         public ObservableCollection<Attachment> AttachmentsToRelocation { get; set; }
@@ -23,6 +26,8 @@ namespace FileSystemAttachmentsRelocation
         public string CurrentAttachmentsFolder { get; set; }
 
         private ICommand _getNotInCurrentDir;
+        private Dispatcher _dispatcher;
+
         public ICommand GetNotInCurrentDir
         {
             get
@@ -52,10 +57,9 @@ namespace FileSystemAttachmentsRelocation
                         Log("Attachment collection is empty or null");
                         return;
                     }
-
                     foreach (var attachment in AttachmentsToRelocation)
                     {
-                        ProcessAttachment(attachment);
+                        Task.Run(() => ProcessAttachment(attachment));
                     }
 
                     Log("Done!");
@@ -65,7 +69,7 @@ namespace FileSystemAttachmentsRelocation
 
         private void ProcessAttachment(Attachment attachment)
         {
-            Log($"Process attachment id: {attachment.Id}, fileName: {Path.GetFileName(attachment.FilePath)}");
+            Log($"Begin process attachment id: {attachment.Id}, fileName: {Path.GetFileName(attachment.FilePath)}");
             try
             {
                 var fsr = new DummyEngine();
@@ -79,16 +83,18 @@ namespace FileSystemAttachmentsRelocation
                         attachmentRepo.Update(attachment);
                     }
                 }
+                Log($"End   process attachment id: {attachment.Id}, fileName: {Path.GetFileName(attachment.FilePath)}");
             }
             catch (Exception e)
             {
-                Log(e.Message);
+                Log($"Error process attachment id: {attachment.Id}, error: {e.Message}");
+                Log(e.StackTrace);
             }
         }
 
         private void Log(string message)
         {
-            InfoMessages.Add($"{DateTime.Now.ToString("O")} - {message}");
+            _dispatcher.Invoke(() => { InfoMessages.Add($"{DateTime.Now.ToString("O")} - {message}"); });
         }
 
         public ObservableCollection<string> InfoMessages { get; set; }
