@@ -55,7 +55,7 @@
             ItemsSource="{Binding InfoMessages}" FontFamily="Consolas">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding}" Header="Message" Width="650">
+                    <GridViewColumn DisplayMemberBinding="{Binding}" Header="Message">
                     </GridViewColumn>
                 </GridView>
             </ListView.View>

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading;
+﻿using System.Threading;
 
 namespace FSAR.Engine
 {
@@ -7,9 +6,7 @@ namespace FSAR.Engine
     {
         public string GetActualPath(string oldFilePath, string currentAttachmentsFolder)
         {
-            var docId = Path.GetFileName(Path.GetDirectoryName(oldFilePath));
-            var actualPath = Path.Combine(currentAttachmentsFolder, docId);
-            return actualPath;
+            return new FileSystemEngine().GetActualPath(oldFilePath, currentAttachmentsFolder);
         }
 
         public void CopyFile(string filePath, string newActualPath)

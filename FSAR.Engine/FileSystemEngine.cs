@@ -48,7 +48,8 @@ namespace FSAR.Engine
         public string GetActualPath(string oldFilePath, string currentAttachmentsFolder)
         {
             var docId = Path.GetFileName(Path.GetDirectoryName(oldFilePath));
-            var actualPath = Path.Combine(currentAttachmentsFolder, docId);
+            var fileName = Path.GetFileName(oldFilePath);
+            var actualPath = Path.Combine(currentAttachmentsFolder, docId, fileName);
             return actualPath;
         }
     }
