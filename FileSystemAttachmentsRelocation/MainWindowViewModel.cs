@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -57,14 +58,20 @@ namespace FileSystemAttachmentsRelocation
                         Log("Attachment collection is empty or null");
                         return;
                     }
-                    foreach (var attachment in AttachmentsToRelocation)
-                    {
-                        Task.Run(() => ProcessAttachment(attachment));
-                    }
-
-                    Log("Done!");
+                    var attachments = AttachmentsToRelocation.ToList();
+                    Task.Run(() => ProcessAttachments(attachments));
                 });
             }
+        }
+
+        private void ProcessAttachments(IList<Attachment> attachmentsToRelocation)
+        {
+            Log("Start");
+            foreach (var attachment in attachmentsToRelocation)
+            {
+                ProcessAttachment(attachment);
+            }
+            Log("Done!");
         }
 
         private void ProcessAttachment(Attachment attachment)
