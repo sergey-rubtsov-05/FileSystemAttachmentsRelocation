@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileSystemAttachmentsRelocation"
         mc:Ignorable="d"
-        Title="MainWindowView" Height="550" Width="925">
+        Title="MainWindowView" Height="550" Width="1025">
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
@@ -17,6 +17,8 @@
             <ColumnDefinition Width="250"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="100" />
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="100" />
             <ColumnDefinition></ColumnDefinition>
@@ -34,11 +36,12 @@
         <TextBox Name="DestFolder" Text="{Binding CurrentAttachmentsFolder}" Grid.Column="3" Grid.Row="1"></TextBox>
         <Button Grid.Column="5" Grid.Row="1" Content="Get not in dir" Command="{Binding GetNotInCurrentDir}"></Button>
         <Button Grid.Column="7" Grid.Row="1" Content="Start!!!" Command="{Binding StartProcess}"></Button>
+        <Button Grid.Column="9" Grid.Row="1" Content="Stop" Command="{Binding StopProcess}"></Button>
         <ListView
             Name="AttachmentsToRelocation"
             Grid.Row="3"
             Grid.Column="1"
-            Grid.ColumnSpan="7"
+            Grid.ColumnSpan="9"
             ItemsSource="{Binding AttachmentsToRelocation}">
             <ListView.View>
                 <GridView>
@@ -51,7 +54,7 @@
         <ListView
             Grid.Row="5"
             Grid.Column="1"
-            Grid.ColumnSpan="7"
+            Grid.ColumnSpan="9"
             ItemsSource="{Binding InfoMessages}" FontFamily="Consolas">
             <ListView.View>
                 <GridView>
