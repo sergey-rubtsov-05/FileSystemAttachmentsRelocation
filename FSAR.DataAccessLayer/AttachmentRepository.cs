@@ -26,11 +26,23 @@ FROM {TableName}").ToList();
             var attachments =
                 Session.Query<Attachment>(
                     $@"
-SELECT TOP 5 {TableFields}
+SELECT TOP 10 {TableFields}
 FROM {TableName}
 WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'").ToList();
 
             return attachments;
+        }
+
+        public int GetTotalCountAttachmentsNotInCurrentFolder(string currentAttachmentsFolder)
+        {
+            var count =
+                Session.ExecuteScalar<int>(
+                    $@"
+SELECT COUNT(Id)
+FROM {TableName}
+WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'");
+
+            return count;
         }
 
         public void Update(Attachment attachment)

@@ -39,7 +39,22 @@
         <Button Grid.Column="5" Grid.Row="1" Content="Get not in dir" Command="{Binding GetNotInCurrentDir}"></Button>
         <Button Grid.Column="7" Grid.Row="1" Content="Start!!!" Command="{Binding StartProcess}"></Button>
         <Button Grid.Column="9" Grid.Row="1" Content="Stop" Command="{Binding StopProcess}"></Button>
-        <ListView
+        <Grid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="9">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="Total attachments to relocation count:"></Label>
+            <Label Grid.Column="1" Grid.Row="0" Content="{Binding TotalAttachmentsToRelocationCount}"></Label>
+            <Label Grid.Column="0" Grid.Row="1" Content="Current attachments to relocation count:"></Label>
+            <Label Grid.Column="1" Grid.Row="1" Content="{Binding AttachmentsToRelocation.Count}"></Label>
+        </Grid>
+        <!--<ListView
             Name="AttachmentsToRelocation"
             Grid.Row="3"
             Grid.Column="1"
@@ -52,7 +67,7 @@
                     <GridViewColumn DisplayMemberBinding="{Binding FilePath}" Header="FP"></GridViewColumn>
                 </GridView>
             </ListView.View>
-        </ListView>
+        </ListView>-->
         <ListView
             Grid.Row="5"
             Grid.Column="1"

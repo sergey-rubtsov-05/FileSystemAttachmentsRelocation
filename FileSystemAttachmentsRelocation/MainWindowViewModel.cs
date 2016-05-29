@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using FSAR.DataAccessLayer;
@@ -33,6 +35,7 @@ namespace FileSystemAttachmentsRelocation
         private readonly CancellationTokenSource _cancellationToken;
         private bool _isProcessDoing;
         private string _textOnProgressBar;
+        private int _totalAttachmentsToRelocationCount;
 
         public ICommand GetNotInCurrentDir
         {
@@ -40,9 +43,11 @@ namespace FileSystemAttachmentsRelocation
             {
                 return _getNotInCurrentDir ?? (_getNotInCurrentDir = new CommandHandler(() =>
                 {
-                    using (var attachmentEngine = new AttachmentRepository())
+                    using (var attachmentRepo = new AttachmentRepository())
                     {
-                        var attachments = attachmentEngine.GetAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
+                        TotalAttachmentsToRelocationCount =
+                            attachmentRepo.GetTotalCountAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
+                        var attachments = attachmentRepo.GetAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
                         foreach (var attachment in attachments)
                         {
                             AttachmentsToRelocation.Add(attachment);
@@ -159,6 +164,16 @@ namespace FileSystemAttachmentsRelocation
             {
                 _textOnProgressBar = value;
                 NotifyPropertyChanged(nameof(TextOnProgressBar));
+            }
+        }
+
+        public int TotalAttachmentsToRelocationCount
+        {
+            get { return _totalAttachmentsToRelocationCount; }
+            set
+            {
+                _totalAttachmentsToRelocationCount = value;
+                NotifyPropertyChanged(nameof(TotalAttachmentsToRelocationCount));
             }
         }
     }
