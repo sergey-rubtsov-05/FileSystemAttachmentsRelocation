@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -13,7 +14,7 @@ using FSAR.Engine;
 
 namespace FileSystemAttachmentsRelocation
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : Notifier
     {
         public MainWindowViewModel()
         {
@@ -29,8 +30,10 @@ namespace FileSystemAttachmentsRelocation
         public string CurrentAttachmentsFolder { get; set; }
 
         private ICommand _getNotInCurrentDir;
-        private Dispatcher _dispatcher;
+        private readonly Dispatcher _dispatcher;
         private readonly CancellationTokenSource _cancellationToken;
+        private bool _isProcessDoing;
+        private string _textOnProgressBar;
 
         public ICommand GetNotInCurrentDir
         {
@@ -62,6 +65,7 @@ namespace FileSystemAttachmentsRelocation
                         return;
                     }
                     var attachments = AttachmentsToRelocation.ToList();
+                    IsProcessDoing = true;
                     Task.Run(() => ProcessAttachments(attachments, _cancellationToken.Token), _cancellationToken.Token);
                 });
             }
@@ -72,14 +76,19 @@ namespace FileSystemAttachmentsRelocation
             Log("Start");
             foreach (var attachment in attachmentsToRelocation)
             {
-                ProcessAttachment(attachment);
                 if (token.IsCancellationRequested)
                 {
-                    Log("Process cancelled!");
                     break;
                 }
+                ProcessAttachment(attachment);
             }
-            Log("Done!");
+            _dispatcher.Invoke(() =>
+            {
+                AttachmentsToRelocation.Clear();
+                IsProcessDoing = false;
+                TextOnProgressBar = string.Empty;
+            });
+            Log(token.IsCancellationRequested ? "Process cancelled!" : "Done!");
         }
 
         private void ProcessAttachment(Attachment attachment)
@@ -89,12 +98,15 @@ namespace FileSystemAttachmentsRelocation
             {
                 var fsr = new DummyEngine();
                 var newActualPath = fsr.GetActualPath(attachment.FilePath, CurrentAttachmentsFolder);
+                Log("Coping", true);
                 fsr.CopyFile(attachment.FilePath, newActualPath);
+                Log("Merging", true);
                 if (fsr.MergeMd5FileHash(attachment.FilePath, newActualPath))
                 {
                     attachment.FilePath = newActualPath;
                     using (var attachmentRepo = new AttachmentRepository())
                     {
+                        Log("Attachment entity updating", true);
                         attachmentRepo.Update(attachment);
                     }
                 }
@@ -107,9 +119,14 @@ namespace FileSystemAttachmentsRelocation
             }
         }
 
-        private void Log(string message)
+        private void Log(string message, bool onProgressBar = false)
         {
-            _dispatcher.Invoke(() => { InfoMessages.Add($"{DateTime.Now.ToString("O")} - {message}"); });
+            _dispatcher.Invoke(() =>
+            {
+                InfoMessages.Add($"{DateTime.Now.ToString("O")} - {message}");
+                if (onProgressBar)
+                    TextOnProgressBar = message;
+            });
         }
 
         public ObservableCollection<string> InfoMessages { get; set; }
@@ -123,6 +140,26 @@ namespace FileSystemAttachmentsRelocation
                     _cancellationToken.Cancel();
                     AttachmentsToRelocation.Clear();
                 });
+            }
+        }
+
+        public bool IsProcessDoing
+        {
+            get { return _isProcessDoing; }
+            set
+            {
+                _isProcessDoing = value;
+                NotifyPropertyChanged(nameof(IsProcessDoing));
+            }
+        }
+
+        public string TextOnProgressBar
+        {
+            get { return _textOnProgressBar; }
+            set
+            {
+                _textOnProgressBar = value;
+                NotifyPropertyChanged(nameof(TextOnProgressBar));
             }
         }
     }
@@ -146,5 +183,15 @@ namespace FileSystemAttachmentsRelocation
         }
 
         public event EventHandler CanExecuteChanged;
+    }
+    public class Notifier : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        protected void NotifyPropertyChanged(
+            string propertyName)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -26,7 +26,7 @@ FROM {TableName}").ToList();
             var attachments =
                 Session.Query<Attachment>(
                     $@"
-SELECT TOP 50 {TableFields}
+SELECT TOP 5 {TableFields}
 FROM {TableName}
 WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'").ToList();
 
