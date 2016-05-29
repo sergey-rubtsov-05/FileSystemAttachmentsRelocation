@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -161,37 +160,6 @@ namespace FileSystemAttachmentsRelocation
                 _textOnProgressBar = value;
                 NotifyPropertyChanged(nameof(TextOnProgressBar));
             }
-        }
-    }
-
-    public class CommandHandler : ICommand
-    {
-        private readonly Action _action;
-        public CommandHandler(Action action)
-        {
-            _action = action;
-        }
-
-        public void Execute(object parameter)
-        {
-            _action();
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public event EventHandler CanExecuteChanged;
-    }
-    public class Notifier : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        protected void NotifyPropertyChanged(
-            string propertyName)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
