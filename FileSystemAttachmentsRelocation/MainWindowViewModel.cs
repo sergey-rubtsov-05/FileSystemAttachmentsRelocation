@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using FSAR.DataAccessLayer;
@@ -24,6 +23,26 @@ namespace FileSystemAttachmentsRelocation
             CurrentAttachmentsFolder = @"C:\Uploads\TTK";
             _dispatcher = Dispatcher.CurrentDispatcher;
             _cancellationToken = new CancellationTokenSource();
+
+            Task.Run(() =>
+            {
+                bool doThis = true;
+                var process = Process.GetCurrentProcess();
+                while (doThis)
+                {
+                    Thread.Sleep(500);
+                    try
+                    {
+                        process.Refresh();
+                        var ramUsage = process.PrivateMemorySize64/1024;
+                        _dispatcher.Invoke(() => { RamUsage = ramUsage; });
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        doThis = false;
+                    }
+                }
+            });
         }
 
         public ObservableCollection<Attachment> AttachmentsToRelocation { get; set; }
@@ -36,6 +55,7 @@ namespace FileSystemAttachmentsRelocation
         private bool _isProcessDoing;
         private string _textOnProgressBar;
         private int _totalAttachmentsToRelocationCount;
+        private long _ramUsage;
 
         public ICommand GetNotInCurrentDir
         {
@@ -174,6 +194,16 @@ namespace FileSystemAttachmentsRelocation
             {
                 _totalAttachmentsToRelocationCount = value;
                 NotifyPropertyChanged(nameof(TotalAttachmentsToRelocationCount));
+            }
+        }
+
+        public long RamUsage
+        {
+            get { return _ramUsage; }
+            set
+            {
+                _ramUsage = value;
+                NotifyPropertyChanged(nameof(RamUsage));
             }
         }
     }
