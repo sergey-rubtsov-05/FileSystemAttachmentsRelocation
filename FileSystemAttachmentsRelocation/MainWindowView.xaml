@@ -70,21 +70,15 @@
                 </GridView>
             </ListView.View>
         </ListView>-->
-        <ListView
+        <ListBox
             Grid.Row="5"
             Grid.Column="1"
             Grid.ColumnSpan="9"
-            ItemsSource="{Binding InfoMessages}" FontFamily="Consolas">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding}" Header="Message" Width="800">
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+            ItemsSource="{Binding InfoMessages}" FontFamily="Consolas" local:ListBoxBehavior.ScrollOnNewItem="True" />
         <Grid  Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="9">
             <ProgressBar IsIndeterminate="{Binding IsProcessDoing}"></ProgressBar>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding TextOnProgressBar}"></TextBlock>
         </Grid>
     </Grid>
 </Window>
+
