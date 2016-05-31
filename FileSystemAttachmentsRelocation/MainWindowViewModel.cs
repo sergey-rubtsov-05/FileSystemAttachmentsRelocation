@@ -56,6 +56,17 @@ namespace FileSystemAttachmentsRelocation
         private string _textOnProgressBar;
         private int _totalAttachmentsToRelocationCount;
         private long _ramUsage;
+        private bool _canStartProcess = true;
+
+        public bool CanStartProcess
+        {
+            get { return _canStartProcess; }
+            set
+            {
+                _canStartProcess = value;
+                NotifyPropertyChanged(nameof(CanStartProcess));
+            }
+        }
 
         public ICommand GetNotInCurrentDir
         {
@@ -88,10 +99,16 @@ namespace FileSystemAttachmentsRelocation
                         Log("Attachment collection is empty or null");
                         return;
                     }
+                    if (IsProcessDoing)
+                    {
+                        Log("Cannot start. One process alredy doing");
+                        return;
+                    }
                     var attachments = AttachmentsToRelocation.ToList();
                     IsProcessDoing = true;
+                    CanStartProcess = false;
                     Task.Run(() => ProcessAttachments(attachments, _cancellationToken.Token), _cancellationToken.Token);
-                });
+                }, CanStartProcess);
             }
         }
 
@@ -110,6 +127,7 @@ namespace FileSystemAttachmentsRelocation
             {
                 AttachmentsToRelocation.Clear();
                 IsProcessDoing = false;
+                CanStartProcess = true;
                 TextOnProgressBar = string.Empty;
             });
             Log(token.IsCancellationRequested ? "Process cancelled!" : "Done!");
