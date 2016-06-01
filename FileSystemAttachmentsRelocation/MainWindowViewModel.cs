@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using FSAR.DataAccessLayer;
 using FSAR.DomainModel;
 using FSAR.Engine;
+using FSAR.Logger;
 
 namespace FileSystemAttachmentsRelocation
 {
@@ -168,6 +169,15 @@ namespace FileSystemAttachmentsRelocation
                 InfoMessages.Add($"{DateTime.Now.ToString("O")} - {message}");
                 if (onProgressBar)
                     TextOnProgressBar = message;
+                Logger.Instance.Info(message);
+                try
+                {
+                    throw new Exception("My custom error!");
+                }
+                catch (Exception e)
+                {
+                    Logger.Instance.Error("error!", e);
+                }
             });
         }
 

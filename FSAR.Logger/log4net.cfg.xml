@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<log4net>
+  <appender name="InfoRollingAppender" type="log4net.Appender.RollingFileAppender">
+    <file value="info.log" />
+    <appendToFile value="true" />
+    <rolingStyle value="Date" />
+    <datePattern value="_yyyy.MM.dd" />
+    <filter type="log4net.Filter.LevelRangeFilter">
+      <levelMin value="INFO" />
+      <levelMax value="INFO" />
+    </filter>
+
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%d [%t] %-5p: %m%n" />
+    </layout>
+  </appender>
+  <appender name="ErrorRollingAppender" type="log4net.Appender.RollingFileAppender">
+    <file value="error.log" />
+    <appendToFile value="true" />
+    <rolingStyle value="Date" />
+    <datePattern value="_yyyy.MM.dd" />
+    <filter type="log4net.Filter.LevelRangeFilter">
+      <levelMin value="ERROR" />
+      <levelMax value="FATAL" />
+    </filter>
+
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%d [%t] %-5p: %m%n" />
+    </layout>
+  </appender>
+
+  <root>
+    <level value="ALL" />
+    <appender-ref ref="InfoRollingAppender" />
+    <appender-ref ref="ErrorRollingAppender" />
+  </root>
+</log4net>

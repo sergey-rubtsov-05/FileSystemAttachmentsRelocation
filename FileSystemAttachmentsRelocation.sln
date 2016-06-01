@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSAR.DataAccessLayer", "FSA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSAR.Engine", "FSAR.Engine\FSAR.Engine.csproj", "{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSAR.Logger", "FSAR.Logger\FSAR.Logger.csproj", "{D1E91310-9C1B-4849-89B6-BECAD257B21D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1E91310-9C1B-4849-89B6-BECAD257B21D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1E91310-9C1B-4849-89B6-BECAD257B21D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1E91310-9C1B-4849-89B6-BECAD257B21D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1E91310-9C1B-4849-89B6-BECAD257B21D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

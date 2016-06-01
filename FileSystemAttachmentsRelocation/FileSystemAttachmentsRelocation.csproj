@@ -113,6 +113,10 @@
       <Project>{27C3FC78-98B5-41C1-A13F-225DA77ED3FC}</Project>
       <Name>FSAR.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FSAR.Logger\FSAR.Logger.csproj">
+      <Project>{D1E91310-9C1B-4849-89B6-BECAD257B21D}</Project>
+      <Name>FSAR.Logger</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
