@@ -11,13 +11,13 @@ namespace FSAR.Logger
         private static readonly Lazy<Logger> _instance = new Lazy<Logger>(() => new Logger());
         private static ILog _logger;
 
-        public static Logger Instance => _instance.Value;
-
         private Logger()
         {
             _logger = LogManager.GetLogger("FileAppender");
             XmlConfigurator.Configure(new FileInfo("log4net.cfg.xml"));
         }
+
+        public static Logger Instance => _instance.Value;
 
         public void Info(string message)
         {
