@@ -157,8 +157,9 @@ namespace FileSystemAttachmentsRelocation
             }
             catch (Exception e)
             {
-                Log($"Error process attachment id: {attachment.Id}, error: {e.Message}");
-                Log(e.StackTrace);
+                var message = $"Error process attachment id: { attachment.Id}";
+                Log($"{message}, error: {e.Message}");
+                Logger.Instance.Error(message, e);
             }
         }
 
@@ -170,14 +171,6 @@ namespace FileSystemAttachmentsRelocation
                 if (onProgressBar)
                     TextOnProgressBar = message;
                 Logger.Instance.Info(message);
-                try
-                {
-                    throw new Exception("My custom error!");
-                }
-                catch (Exception e)
-                {
-                    Logger.Instance.Error("error!", e);
-                }
             });
         }
 
