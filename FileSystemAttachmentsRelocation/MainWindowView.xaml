@@ -27,7 +27,7 @@
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="10"></RowDefinition>
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition />
             <RowDefinition Height="10"></RowDefinition>
@@ -36,8 +36,8 @@
         </Grid.RowDefinitions>
         <Label Name="DestFolderLabel" Content="CurrentAttachmentsFolder" Grid.Column="1" Grid.Row="1"></Label>
         <TextBox Name="DestFolder" Text="{Binding CurrentAttachmentsFolder}" Grid.Column="3" Grid.Row="1"></TextBox>
-        <Button Grid.Column="5" Grid.Row="1" Content="Get not in dir" Command="{Binding GetNotInCurrentDir}"></Button>
-        <Button Grid.Column="7" Grid.Row="1" Content="Start!!!" Command="{Binding StartProcess}" IsEnabled="{Binding CanStartProcess}"></Button>
+        <Button Grid.Column="5" Grid.Row="1" Content="Get not in dir" Command="{Binding GetNotInCurrentDir}" IsEnabled="{Binding CanDoingAsyncCommand}"></Button>
+        <Button Grid.Column="7" Grid.Row="1" Content="Start!!!" Command="{Binding StartProcess}" IsEnabled="{Binding CanDoingAsyncCommand}"></Button>
         <Button Grid.Column="9" Grid.Row="1" Content="Stop" Command="{Binding StopProcess}"></Button>
         <Grid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="9">
             <Grid.ColumnDefinitions>
@@ -54,7 +54,7 @@
             <Label Grid.Column="0" Grid.Row="1" Content="Current attachments to relocation count:"></Label>
             <Label Grid.Column="1" Grid.Row="1" Content="{Binding AttachmentsToRelocation.Count}"></Label>
             <Label Grid.Column="0" Grid.Row="2" Content="RAM Usage (kb)"></Label>
-            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding RamUsage, StringFormat=\{0\:N0\}}"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding RamUsage, StringFormat=\{0\:N0\}}" VerticalAlignment="Center" Padding="5"></TextBlock>
         </Grid>
         <!--<ListView
             Name="AttachmentsToRelocation"
@@ -76,7 +76,7 @@
             Grid.ColumnSpan="9"
             ItemsSource="{Binding InfoMessages}" FontFamily="Consolas" local:ListBoxBehavior.ScrollOnNewItem="True" />
         <Grid  Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="9">
-            <ProgressBar IsIndeterminate="{Binding IsProcessDoing}"></ProgressBar>
+            <ProgressBar IsIndeterminate="{Binding IsDoingAsyncCommand}"></ProgressBar>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding TextOnProgressBar}"></TextBlock>
         </Grid>
     </Grid>
