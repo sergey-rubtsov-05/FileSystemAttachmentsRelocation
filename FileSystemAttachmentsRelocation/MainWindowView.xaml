@@ -16,7 +16,7 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="250"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition Width="110"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="100" />
             <ColumnDefinition></ColumnDefinition>
@@ -36,7 +36,7 @@
         </Grid.RowDefinitions>
         <Label Name="DestFolderLabel" Content="CurrentAttachmentsFolder" Grid.Column="1" Grid.Row="1"></Label>
         <TextBox Name="DestFolder" Text="{Binding CurrentAttachmentsFolder}" Grid.Column="3" Grid.Row="1"></TextBox>
-        <Button Grid.Column="5" Grid.Row="1" Content="Get not in dir" Command="{Binding GetNotInCurrentDir}" IsEnabled="{Binding CanDoingAsyncCommand}"></Button>
+        <Button Grid.Column="5" Grid.Row="1" Content="Count not in folder" Command="{Binding GetNotInCurrentDir}" IsEnabled="{Binding CanDoingAsyncCommand}"></Button>
         <Button Grid.Column="7" Grid.Row="1" Content="Start!!!" Command="{Binding StartProcess}" IsEnabled="{Binding CanDoingAsyncCommand}"></Button>
         <Button Grid.Column="9" Grid.Row="1" Content="Stop" Command="{Binding StopProcess}"></Button>
         <Grid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="9">
@@ -52,7 +52,7 @@
             <Label Grid.Column="0" Grid.Row="0" Content="Total attachments to relocation count:"></Label>
             <Label Grid.Column="1" Grid.Row="0" Content="{Binding TotalAttachmentsToRelocationCount}"></Label>
             <Label Grid.Column="0" Grid.Row="1" Content="Current attachments to relocation count:"></Label>
-            <Label Grid.Column="1" Grid.Row="1" Content="{Binding AttachmentsToRelocation.Count}"></Label>
+            <Label Grid.Column="1" Grid.Row="1" Content="{Binding AttachmentsToRelocationCount}"></Label>
             <Label Grid.Column="0" Grid.Row="2" Content="RAM Usage (kb)"></Label>
             <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding RamUsage, StringFormat=\{0\:N0\}}" VerticalAlignment="Center" Padding="5"></TextBlock>
         </Grid>

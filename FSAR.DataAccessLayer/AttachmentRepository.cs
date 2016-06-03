@@ -21,12 +21,12 @@ FROM {TableName}").ToList();
             return attachments;
         }
 
-        public List<Attachment> GetAttachmentsNotInCurrentFolder(string currentAttachmentsFolder)
+        public List<Attachment> GetAttachmentsNotInCurrentFolder(string currentAttachmentsFolder, int count = 10)
         {
             var attachments =
                 Session.Query<Attachment>(
                     $@"
-SELECT TOP 10 {TableFields}
+SELECT TOP {count} {TableFields}
 FROM {TableName}
 WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'").ToList();
 

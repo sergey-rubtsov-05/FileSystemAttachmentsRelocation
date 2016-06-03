@@ -2,7 +2,7 @@
 
 <log4net>
   <appender name="InfoRollingAppender" type="log4net.Appender.RollingFileAppender">
-    <file value="info.log" />
+    <file value="logs\info.log" />
     <appendToFile value="true" />
     <rolingStyle value="Date" />
     <datePattern value="_yyyy.MM.dd" />
@@ -16,7 +16,7 @@
     </layout>
   </appender>
   <appender name="ErrorRollingAppender" type="log4net.Appender.RollingFileAppender">
-    <file value="error.log" />
+    <file value="logs\error.log" />
     <appendToFile value="true" />
     <rolingStyle value="Date" />
     <datePattern value="_yyyy.MM.dd" />

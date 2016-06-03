@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -26,10 +25,11 @@ namespace FileSystemAttachmentsRelocation
         private long _ramUsage;
         private string _textOnProgressBar;
         private int _totalAttachmentsToRelocationCount;
+        private int _attachmentsToRelocationCount;
 
         public MainWindowViewModel()
         {
-            AttachmentsToRelocation = new ObservableCollection<Attachment>();
+            AttachmentsToRelocationCount = 0;
             InfoMessages = new ObservableCollection<string>();
             CurrentAttachmentsFolder = @"C:\Uploads\TTK";
             _dispatcher = Dispatcher.CurrentDispatcher;
@@ -45,7 +45,8 @@ namespace FileSystemAttachmentsRelocation
                     try
                     {
                         process.Refresh();
-                        var ramUsage = process.PrivateMemorySize64 / 1024;
+                        var performanceCounter = new PerformanceCounter("Process", "Working Set - Private", process.ProcessName);
+                        var ramUsage = performanceCounter.RawValue / 1024;
                         _dispatcher.Invoke(() => { RamUsage = ramUsage; });
                     }
                     catch (TaskCanceledException)
@@ -55,8 +56,6 @@ namespace FileSystemAttachmentsRelocation
                 }
             });
         }
-
-        public ObservableCollection<Attachment> AttachmentsToRelocation { get; set; }
 
         public string CurrentAttachmentsFolder { get; set; }
 
@@ -82,22 +81,21 @@ namespace FileSystemAttachmentsRelocation
                         CanDoingAsyncCommand = false;
                         using (var attachmentRepo = new AttachmentRepository())
                         {
-                            Log("Getting total count", true);
-                            TotalAttachmentsToRelocationCount =
-                                attachmentRepo.GetTotalCountAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
-                            Log($"Total count: {TotalAttachmentsToRelocationCount}");
-                            Log("Getting 10 attachments not in current folder");
-                            var attachments = attachmentRepo.GetAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
-                            foreach (var attachment in attachments)
-                            {
-                                AttachmentsToRelocation.Add(attachment);
-                            }
-                            Log("Done getting attachments", true);
+                            GetTotalCountAttachmentsNotInCurrentFolder(attachmentRepo);
                             _dispatcher.Invoke(OnAsyncCommandEnd);
                         }
                     });
                 }, CanDoingAsyncCommand));
             }
+        }
+
+        private int GetTotalCountAttachmentsNotInCurrentFolder(AttachmentRepository attachmentRepo)
+        {
+            Log("Getting total count", true);
+            TotalAttachmentsToRelocationCount =
+                attachmentRepo.GetTotalCountAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
+            Log($"Total count: {TotalAttachmentsToRelocationCount}");
+            return TotalAttachmentsToRelocationCount;
         }
 
         public ICommand StartProcess
@@ -106,21 +104,15 @@ namespace FileSystemAttachmentsRelocation
             {
                 return new CommandHandler(() =>
                 {
-                    if (AttachmentsToRelocation == null || !AttachmentsToRelocation.Any())
-                    {
-                        Log("Attachment collection is empty or null");
-                        return;
-                    }
                     if (IsDoingAsyncCommand)
                     {
-                        Log("Cannot start. One process alredy doing");
+                        Log("Cannot start. One process already doing");
                         return;
                     }
                     _cancellationToken = new CancellationTokenSource();
-                    var attachments = AttachmentsToRelocation.ToList();
                     IsDoingAsyncCommand = true;
                     CanDoingAsyncCommand = false;
-                    Task.Run(() => ProcessAttachments(attachments, _cancellationToken.Token), _cancellationToken.Token);
+                    Task.Run(() => ProcessAttachments(_cancellationToken.Token), _cancellationToken.Token);
                 }, CanDoingAsyncCommand);
             }
         }
@@ -134,7 +126,6 @@ namespace FileSystemAttachmentsRelocation
                 return new CommandHandler(() =>
                 {
                     _cancellationToken.Cancel();
-                    AttachmentsToRelocation.Clear();
                 });
             }
         }
@@ -179,22 +170,48 @@ namespace FileSystemAttachmentsRelocation
             }
         }
 
-        private void ProcessAttachments(IList<Attachment> attachmentsToRelocation, CancellationToken token)
+        public int AttachmentsToRelocationCount
+        {
+            get { return _attachmentsToRelocationCount; }
+            set
+            {
+                _attachmentsToRelocationCount = value;
+                NotifyPropertyChanged(nameof(AttachmentsToRelocationCount));
+            }
+        }
+
+        private void ProcessAttachments(CancellationToken token)
         {
             Log("Start");
-            foreach (var attachment in attachmentsToRelocation)
+            var doThis = true;
+            while (doThis)
             {
-                if (token.IsCancellationRequested)
+                List<Attachment> attachments = new List<Attachment>();
+                using (var attachmentRepo = new AttachmentRepository())
                 {
-                    break;
+                    var count = GetTotalCountAttachmentsNotInCurrentFolder(attachmentRepo);
+                    if (count > 0)
+                    {
+                        attachments = attachmentRepo.GetAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
+                        AttachmentsToRelocationCount = attachments.Count;
+                    }
+                    else
+                    {
+                        doThis = false;
+                    }
                 }
-                ProcessAttachment(attachment);
+                foreach (var attachment in attachments)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        doThis = false;
+                        break;
+                    }
+                    ProcessAttachment(attachment);
+                    AttachmentsToRelocationCount -= 1;
+                }
             }
-            _dispatcher.Invoke(() =>
-            {
-                AttachmentsToRelocation.Clear();
-                OnAsyncCommandEnd();
-            });
+            _dispatcher.Invoke(OnAsyncCommandEnd);
             Log(token.IsCancellationRequested ? "Process cancelled!" : "Done!");
         }
 
