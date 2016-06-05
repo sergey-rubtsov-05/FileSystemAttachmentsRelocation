@@ -227,12 +227,13 @@ namespace FileSystemAttachmentsRelocation
             Log($"Begin process attachment id: {attachment.Id}, fileName: {Path.GetFileName(attachment.FilePath)}");
             try
             {
-                var fsr = new DummyEngine();
+                var fsr = new FileSystemEngine();
+                Log($"Old attachment file path: {attachment.FilePath}");
                 var newActualPath = fsr.GetActualPath(attachment.FilePath, CurrentAttachmentsFolder);
-                Log("Coping", true);
-                fsr.CopyFile(attachment.FilePath, newActualPath);
-                Log("Merging", true);
-                if (fsr.MergeMd5FileHash(attachment.FilePath, newActualPath))
+                Log($"New attachment file path: {newActualPath}");
+                Log("Coping and merging", true);
+                var result = fsr.CopyFile(attachment.FilePath, newActualPath);
+                if (result)
                 {
                     attachment.FilePath = newActualPath;
                     using (var attachmentRepo = new AttachmentRepository())
@@ -240,6 +241,10 @@ namespace FileSystemAttachmentsRelocation
                         Log("Attachment entity updating", true);
                         attachmentRepo.Update(attachment);
                     }
+                }
+                else
+                {
+                    Log($"Coping or merging for attachment {{{attachment.Id}}} was false");
                 }
                 Log($"End   process attachment id: {attachment.Id}, fileName: {Path.GetFileName(attachment.FilePath)}");
             }

@@ -6,7 +6,7 @@ namespace FSAR.Engine
 {
     public class FileSystemEngine
     {
-        public void CopyFile(string sourceFilePath, string destFilePath)
+        public bool CopyFile(string sourceFilePath, string destFilePath)
         {
             if (sourceFilePath == null) throw new ArgumentNullException(nameof(sourceFilePath));
             if (destFilePath == null) throw new ArgumentNullException(nameof(destFilePath));
@@ -16,8 +16,10 @@ namespace FSAR.Engine
                 if (!Directory.Exists(destDirPath))
                     Directory.CreateDirectory(destDirPath);
 
-
             File.Copy(sourceFilePath, destFilePath, false);
+
+            var mergeResult = MergeMd5FileHash(sourceFilePath, destDirPath);
+            return mergeResult;
         }
 
         public bool MergeMd5FileHash(string filePath1, string filePath2)
