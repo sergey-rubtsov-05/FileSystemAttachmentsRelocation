@@ -180,6 +180,8 @@ namespace FileSystemAttachmentsRelocation
             }
         }
 
+        private List<Guid> _attachementsWithErrors = new List<Guid>();
+
         private void ProcessAttachments(CancellationToken token)
         {
             Log("Start");
@@ -190,7 +192,16 @@ namespace FileSystemAttachmentsRelocation
                 using (var attachmentRepo = new AttachmentRepository())
                 {
                     var count = GetTotalCountAttachmentsNotInCurrentFolder(attachmentRepo);
-                    if (count > 0)
+                    if (count == 0)
+                    {
+                        doThis = false;
+                    }
+                    else if (count == _attachementsWithErrors.Count)
+                    {
+                        Log("Attachments only with errors");
+                        doThis = false;
+                    }
+                    else if (count > 0)
                     {
                         attachments = attachmentRepo.GetAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
                         AttachmentsToRelocationCount = attachments.Count;
@@ -253,6 +264,8 @@ namespace FileSystemAttachmentsRelocation
                 var message = $"Error process attachment id: {attachment.Id}";
                 Log($"{message}, error: {e.Message}");
                 Logger.Instance.Error(message, e);
+                if (!_attachementsWithErrors.Contains(attachment.Id))
+                    _attachementsWithErrors.Add(attachment.Id);
             }
         }
 

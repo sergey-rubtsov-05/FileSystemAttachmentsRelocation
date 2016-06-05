@@ -18,7 +18,7 @@ namespace FSAR.Engine
 
             File.Copy(sourceFilePath, destFilePath, false);
 
-            var mergeResult = MergeMd5FileHash(sourceFilePath, destDirPath);
+            var mergeResult = MergeMd5FileHash(sourceFilePath, destFilePath);
             return mergeResult;
         }
 

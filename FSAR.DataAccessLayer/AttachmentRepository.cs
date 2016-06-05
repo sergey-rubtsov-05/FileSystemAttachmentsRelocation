@@ -47,12 +47,11 @@ WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'");
 
         public void Update(Attachment attachment)
         {
-            return;
             Session.Query<Attachment>(
                 $@"
 UPDATE {TableName}
-SET FilePath = {attachment.FilePath}
-WHERE Id = @Id", new { attachment.Id });
+SET FilePath = @FilePath
+WHERE Id = @Id", new { Id = attachment.Id, FilePath = attachment.FilePath });
         }
     }
 }
