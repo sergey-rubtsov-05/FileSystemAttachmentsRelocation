@@ -31,6 +31,7 @@ namespace FileSystemAttachmentsRelocation
         {
             AttachmentsToRelocationCount = 0;
             InfoMessages = new ObservableCollection<string>();
+            AttachementsWithErrors = new ObservableCollection<Guid>();
             CurrentAttachmentsFolder = @"C:\Uploads\TTK";
             _dispatcher = Dispatcher.CurrentDispatcher;
             _cancellationToken = new CancellationTokenSource();
@@ -91,11 +92,21 @@ namespace FileSystemAttachmentsRelocation
 
         private int GetTotalCountAttachmentsNotInCurrentFolder(AttachmentRepository attachmentRepo)
         {
-            Log("Getting total count", true);
-            TotalAttachmentsToRelocationCount =
-                attachmentRepo.GetTotalCountAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
-            Log($"Total count: {TotalAttachmentsToRelocationCount}");
-            return TotalAttachmentsToRelocationCount;
+            try
+            {
+                Log("Getting total count", true);
+                TotalAttachmentsToRelocationCount =
+                    attachmentRepo.GetTotalCountAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
+                Log($"Total count: {TotalAttachmentsToRelocationCount}");
+                return TotalAttachmentsToRelocationCount;
+            }
+            catch (Exception e)
+            {
+                var message = $"Error on getting total count. Message: {e.Message}";
+                Log(message);
+                Logger.Instance.Error(message, e);
+                return 0;
+            }
         }
 
         public ICommand StartProcess
@@ -180,7 +191,7 @@ namespace FileSystemAttachmentsRelocation
             }
         }
 
-        private List<Guid> _attachementsWithErrors = new List<Guid>();
+        public ObservableCollection<Guid> AttachementsWithErrors{ get; set; }
 
         private void ProcessAttachments(CancellationToken token)
         {
@@ -196,7 +207,7 @@ namespace FileSystemAttachmentsRelocation
                     {
                         doThis = false;
                     }
-                    else if (count == _attachementsWithErrors.Count)
+                    else if (count == AttachementsWithErrors.Count)
                     {
                         Log("Attachments only with errors");
                         doThis = false;
@@ -264,8 +275,8 @@ namespace FileSystemAttachmentsRelocation
                 var message = $"Error process attachment id: {attachment.Id}";
                 Log($"{message}, error: {e.Message}");
                 Logger.Instance.Error(message, e);
-                if (!_attachementsWithErrors.Contains(attachment.Id))
-                    _attachementsWithErrors.Add(attachment.Id);
+                if (!AttachementsWithErrors.Contains(attachment.Id))
+                    AttachementsWithErrors.Add(attachment.Id);
             }
         }
 

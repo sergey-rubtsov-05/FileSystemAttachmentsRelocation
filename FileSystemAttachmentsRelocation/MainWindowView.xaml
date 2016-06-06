@@ -48,13 +48,16 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Grid.Column="0" Grid.Row="0" Content="Total attachments to relocation count:"></Label>
             <Label Grid.Column="1" Grid.Row="0" Content="{Binding TotalAttachmentsToRelocationCount}"></Label>
             <Label Grid.Column="0" Grid.Row="1" Content="Current attachments to relocation count:"></Label>
             <Label Grid.Column="1" Grid.Row="1" Content="{Binding AttachmentsToRelocationCount}"></Label>
-            <Label Grid.Column="0" Grid.Row="2" Content="RAM Usage (kb)"></Label>
-            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding RamUsage, StringFormat=\{0\:N0\}}" VerticalAlignment="Center" Padding="5"></TextBlock>
+            <Label Grid.Column="0" Grid.Row="2" Content="Attachment with errors"></Label>
+            <Label Grid.Column="1" Grid.Row="2" Content="{Binding AttachementsWithErrors.Count}"></Label>
+            <Label Grid.Column="0" Grid.Row="3" Content="RAM Usage (kb)"></Label>
+            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding RamUsage, StringFormat=\{0\:N0\}}" VerticalAlignment="Center" Padding="5"></TextBlock>
         </Grid>
         <!--<ListView
             Name="AttachmentsToRelocation"
