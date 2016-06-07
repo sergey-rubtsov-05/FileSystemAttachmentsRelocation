@@ -26,6 +26,9 @@ namespace FileSystemAttachmentsRelocation
         private string _textOnProgressBar;
         private int _totalAttachmentsToRelocationCount;
         private int _attachmentsToRelocationCount;
+        private string _driveName;
+        private long _driveFreeSpace;
+        private string _currentAttachmentsFolder;
 
         public MainWindowViewModel()
         {
@@ -56,9 +59,48 @@ namespace FileSystemAttachmentsRelocation
                     }
                 }
             });
+
+            Task.Run(() =>
+            {
+                var doThis = true;
+                while (doThis)
+                {
+                    Thread.Sleep(1000);
+                    try
+                    {
+                        if (string.IsNullOrWhiteSpace(CurrentAttachmentsFolder))
+                            continue;
+
+                        var drive = new DriveInfo(Path.GetPathRoot(CurrentAttachmentsFolder));
+                        if (!drive.IsReady)
+                        {
+                            DriveFreeSpace = 0;
+                            continue;
+                        }
+                        var freeSpace = drive.AvailableFreeSpace/1024/1024;
+                        DriveName = drive.Name;
+                        DriveFreeSpace = freeSpace;
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        doThis = false;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            });
         }
 
-        public string CurrentAttachmentsFolder { get; set; }
+        public string CurrentAttachmentsFolder
+        {
+            get { return _currentAttachmentsFolder; }
+            set
+            {
+                _currentAttachmentsFolder = value;
+                NotifyPropertyChanged(nameof(CurrentAttachmentsFolder));
+            }
+        }
 
         public bool CanDoingAsyncCommand
         {
@@ -192,6 +234,26 @@ namespace FileSystemAttachmentsRelocation
         }
 
         public ObservableCollection<Guid> AttachementsWithErrors{ get; set; }
+
+        public string DriveName
+        {
+            get { return _driveName; }
+            set
+            {
+                _driveName = value;
+                NotifyPropertyChanged(nameof(DriveName));
+            }
+        }
+
+        public long DriveFreeSpace
+        {
+            get { return _driveFreeSpace; }
+            set
+            {
+                _driveFreeSpace = value;
+                NotifyPropertyChanged(nameof(DriveFreeSpace));
+            }
+        }
 
         private void ProcessAttachments(CancellationToken token)
         {

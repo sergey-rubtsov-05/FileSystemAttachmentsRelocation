@@ -35,7 +35,7 @@
             <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Name="DestFolderLabel" Content="CurrentAttachmentsFolder" Grid.Column="1" Grid.Row="1"></Label>
-        <TextBox Name="DestFolder" Text="{Binding CurrentAttachmentsFolder}" Grid.Column="3" Grid.Row="1"></TextBox>
+        <TextBox Name="DestFolder" Text="{Binding CurrentAttachmentsFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="3" Grid.Row="1" Margin="5"></TextBox>
         <Button Grid.Column="5" Grid.Row="1" Content="Count not in folder" Command="{Binding GetNotInCurrentDir}" IsEnabled="{Binding CanDoingAsyncCommand}"></Button>
         <Button Grid.Column="7" Grid.Row="1" Content="Start!!!" Command="{Binding StartProcess}" IsEnabled="{Binding CanDoingAsyncCommand}"></Button>
         <Button Grid.Column="9" Grid.Row="1" Content="Stop" Command="{Binding StopProcess}"></Button>
@@ -49,6 +49,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Label Grid.Column="0" Grid.Row="0" Content="Total attachments to relocation count:"></Label>
             <Label Grid.Column="1" Grid.Row="0" Content="{Binding TotalAttachmentsToRelocationCount}"></Label>
@@ -56,8 +57,10 @@
             <Label Grid.Column="1" Grid.Row="1" Content="{Binding AttachmentsToRelocationCount}"></Label>
             <Label Grid.Column="0" Grid.Row="2" Content="Attachment with errors"></Label>
             <Label Grid.Column="1" Grid.Row="2" Content="{Binding AttachementsWithErrors.Count}"></Label>
-            <Label Grid.Column="0" Grid.Row="3" Content="RAM Usage (kb)"></Label>
-            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding RamUsage, StringFormat=\{0\:N0\}}" VerticalAlignment="Center" Padding="5"></TextBlock>
+            <Label Grid.Column="0" Grid.Row="3" Content="RAM Usage"></Label>
+            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding RamUsage, StringFormat='\{0\:N0\} Kb'}" VerticalAlignment="Center" Padding="5"></TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="{Binding DriveName, StringFormat='Free space drive: \{0\}'}" Padding="5"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding DriveFreeSpace, StringFormat='\{0\:N0} Mb'}" Padding="5"></TextBlock>
         </Grid>
         <!--<ListView
             Name="AttachmentsToRelocation"
