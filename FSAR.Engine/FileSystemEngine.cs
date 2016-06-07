@@ -16,7 +16,8 @@ namespace FSAR.Engine
                 if (!Directory.Exists(destDirPath))
                     Directory.CreateDirectory(destDirPath);
 
-            File.Copy(sourceFilePath, destFilePath, false);
+            if (!File.Exists(destFilePath))
+                File.Copy(sourceFilePath, destFilePath, false);
 
             var mergeResult = MergeMd5FileHash(sourceFilePath, destFilePath);
             return mergeResult;
