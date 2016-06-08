@@ -12,13 +12,25 @@ namespace FSAR.DataAccessLayer
 
         private const string TableFields = "Id, DisplayFileName, FilePath";
 
-        public List<Attachment> GetAttachmentByFilePathMask(string mask)
+        public AttachmentRepository()
         {
-            var attachments = Session.Query<Attachment>($@"
-SELECT TOP 10 *
-FROM {TableName}").ToList();
+            CreateFields();
+        }
 
-            return attachments;
+        private void CreateFields()
+        {
+            var isExists = Session.ExecuteScalar<bool>($@"
+IF EXISTS
+  ( SELECT TOP(1) 1
+   FROM sys.columns
+   WHERE Name = N'OldFilePath'
+     AND Object_ID = Object_ID(N'{TableName}')) BEGIN
+SELECT 1 END ELSE BEGIN
+SELECT 0 END");
+            if (!isExists)
+            {
+                Session.Execute($@"ALTER TABLE {TableName} ADD OldFilePath nvarchar(MAX) NULL");
+            }
         }
 
         public List<Attachment> GetAttachmentsNotInCurrentFolder(string currentAttachmentsFolder, int count = 10)
@@ -50,8 +62,9 @@ WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'");
             Session.Query<Attachment>(
                 $@"
 UPDATE {TableName}
-SET FilePath = @FilePath
-WHERE Id = @Id", new { Id = attachment.Id, FilePath = attachment.FilePath });
+SET FilePath = @FilePath,
+    OldFilePath = @OldFilePath
+WHERE Id = @Id", attachment);
         }
     }
 }

@@ -319,6 +319,7 @@ namespace FileSystemAttachmentsRelocation
                 var result = fsr.CopyFile(attachment.FilePath, newActualPath);
                 if (result)
                 {
+                    attachment.OldFilePath = attachment.FilePath;
                     attachment.FilePath = newActualPath;
                     using (var attachmentRepo = new AttachmentRepository())
                     {
