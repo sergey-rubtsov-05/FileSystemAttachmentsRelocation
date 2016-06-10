@@ -51,6 +51,13 @@ namespace FileSystemAttachmentsRelocation
                         process.Refresh();
                         var performanceCounter = new PerformanceCounter("Process", "Working Set - Private", process.ProcessName);
                         var ramUsage = performanceCounter.RawValue / 1024;
+                        if (ramUsage > 1*1024*1024)
+                        {
+                            Log("Attachment relocation is stopped because RAM usage more than 1 Gb");
+                            CanDoingAsyncCommand = false;
+                            doThis = false;
+                            _cancellationToken.Cancel();
+                        }
                         _dispatcher.Invoke(() => { RamUsage = ramUsage; });
                     }
                     catch (TaskCanceledException)
@@ -78,6 +85,13 @@ namespace FileSystemAttachmentsRelocation
                             continue;
                         }
                         var freeSpace = drive.AvailableFreeSpace/1024/1024;
+                        if (freeSpace < 5*1024)
+                        {
+                            Log("Attachment relocation is stopped because drive free space less than 5 Gb");
+                            CanDoingAsyncCommand = false;
+                            doThis = false;
+                            _cancellationToken.Cancel();
+                        }
                         DriveName = drive.Name;
                         DriveFreeSpace = freeSpace;
                     }
