@@ -322,6 +322,11 @@ namespace FileSystemAttachmentsRelocation
 
         private void ProcessAttachment(Attachment attachment)
         {
+            if (AttachementsWithErrors.Contains(attachment.Id))
+            {
+                Log($"Attachment with error. Id: {attachment.Id}, filePath: {attachment.FilePath}");
+                return;
+            }
             Log($"Begin process attachment id: {attachment.Id}, fileName: {Path.GetFileName(attachment.FilePath)}");
             try
             {
