@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -35,7 +36,7 @@ namespace FileSystemAttachmentsRelocation
             AttachmentsToRelocationCount = 0;
             InfoMessages = new ObservableCollection<string>();
             AttachementsWithErrors = new ObservableCollection<Guid>();
-            CurrentAttachmentsFolder = @"C:\Uploads\TTK";
+            CurrentAttachmentsFolder = ConfigurationManager.AppSettings["CurrentAttachmentsFolder"];
             _dispatcher = Dispatcher.CurrentDispatcher;
             _cancellationToken = new CancellationTokenSource();
 
