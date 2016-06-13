@@ -292,7 +292,7 @@ namespace FileSystemAttachmentsRelocation
                     }
                     else if (count > 0)
                     {
-                        attachments = attachmentRepo.GetAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder);
+                        attachments = attachmentRepo.GetAttachmentsNotInCurrentFolder(CurrentAttachmentsFolder, int.Parse(ConfigurationManager.AppSettings["AttachmentsPerConnection"]));
                         AttachmentsToRelocationCount = attachments.Count;
                     }
                     else
