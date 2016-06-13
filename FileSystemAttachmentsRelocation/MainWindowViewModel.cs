@@ -139,6 +139,7 @@ namespace FileSystemAttachmentsRelocation
                         CanDoingAsyncCommand = false;
                         using (var attachmentRepo = new AttachmentRepository())
                         {
+                            attachmentRepo.ClearErrorMessages();
                             GetTotalCountAttachmentsNotInCurrentFolder(attachmentRepo);
                             _dispatcher.Invoke(OnAsyncCommandEnd);
                         }
@@ -360,6 +361,8 @@ namespace FileSystemAttachmentsRelocation
                 Logger.Instance.Error(message, e);
                 if (!AttachementsWithErrors.Contains(attachment.Id))
                     AttachementsWithErrors.Add(attachment.Id);
+                using (var attachmentRepo = new AttachmentRepository())
+                    attachmentRepo.UpdateErrorMessage(attachment.Id, e.Message);
             }
         }
 

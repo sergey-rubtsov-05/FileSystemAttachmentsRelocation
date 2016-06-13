@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using FSAR.DomainModel;
@@ -14,22 +15,23 @@ namespace FSAR.DataAccessLayer
 
         public AttachmentRepository()
         {
-            CreateFields();
+            CreateField("OldFilePath");
+            CreateField("RelocationErrorMessage");
         }
 
-        private void CreateFields()
+        private void CreateField(string fieldName)
         {
             var isExists = Session.ExecuteScalar<bool>($@"
 IF EXISTS
   ( SELECT TOP(1) 1
    FROM sys.columns
-   WHERE Name = N'OldFilePath'
+   WHERE Name = N'{fieldName}'
      AND Object_ID = Object_ID(N'{TableName}')) BEGIN
 SELECT 1 END ELSE BEGIN
 SELECT 0 END");
             if (!isExists)
             {
-                Session.Execute($@"ALTER TABLE {TableName} ADD OldFilePath nvarchar(MAX) NULL");
+                Session.Execute($@"ALTER TABLE {TableName} ADD {fieldName} nvarchar(MAX) NULL");
             }
         }
 
@@ -40,7 +42,8 @@ SELECT 0 END");
                     $@"
 SELECT TOP {count} {TableFields}
 FROM {TableName}
-WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'").ToList();
+WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'
+  AND RelocationErrorMessage IS NULL").ToList();
 
             return attachments;
         }
@@ -52,19 +55,38 @@ WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'").ToList();
                     $@"
 SELECT COUNT(Id)
 FROM {TableName}
-WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'");
+WHERE FilePath NOT LIKE '{currentAttachmentsFolder}%'
+  AND RelocationErrorMessage IS NULL");
 
             return count;
         }
 
         public void Update(Attachment attachment)
         {
-            Session.Query<Attachment>(
+            Session.Execute(
                 $@"
 UPDATE {TableName}
 SET FilePath = @FilePath,
     OldFilePath = @OldFilePath
 WHERE Id = @Id", attachment);
+        }
+
+        public void UpdateErrorMessage(Guid attachmentId, string message)
+        {
+            Session.Execute(
+                $@"
+UPDATE {TableName}
+SET RelocationErrorMessage = @RelocationErrorMessage
+WHERE Id = @Id",
+                new {Id = attachmentId, RelocationErrorMessage = message});
+        }
+
+        public void ClearErrorMessages()
+        {
+            Session.Execute(
+                $@"
+UPDATE {TableName}
+SET RelocationErrorMessage = NULL");
         }
     }
 }

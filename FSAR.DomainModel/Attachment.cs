@@ -7,5 +7,7 @@
         public string FilePath { get; set; }
 
         public string OldFilePath { get; set; }
+
+        public string RelocationErrorMessage { get; set; }
     }
 }
